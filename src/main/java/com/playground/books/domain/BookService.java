@@ -3,6 +3,7 @@ package com.playground.books.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -21,7 +22,7 @@ public class BookService {
         return rep.findById(id);
     }
 
-    public Iterable<Book> getBookByType(String tipo) {
+    public List<Book> getBookByType(String tipo) {
         return rep.findByTipo(tipo);
     }
 

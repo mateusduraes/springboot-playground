@@ -3,8 +3,10 @@ package com.playground.books.api;
 import com.playground.books.domain.Book;
 import com.playground.books.domain.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -16,18 +18,23 @@ public class BooksController {
     private BookService service;
 
     @GetMapping()
-    public Iterable<Book> get() {
-        return service.get();
+    public ResponseEntity<Iterable<Book>> get() {
+        return ResponseEntity.ok(service.get());
     }
 
     @GetMapping("/{id}")
-    public Optional<Book> get(@PathVariable("id") Long id) {
-        return service.getBookById(id);
+    public ResponseEntity<Book> get(@PathVariable("id") Long id) {
+
+        Optional<Book> book = service.getBookById(id);
+        return book
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/tipo/{tipo}")
-    public Iterable<Book> get(@PathVariable("tipo") String tipo) {
-        return service.getBookByType(tipo);
+    public ResponseEntity<List<Book>> get(@PathVariable("tipo") String tipo) {
+        List<Book> books = service.getBookByType(tipo);
+        return books.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(books);
     }
 
     @PostMapping()
